@@ -1,5 +1,5 @@
-//! This example showcases a simple native custom widget that draws a circle.
-mod circle {
+//! This example showcases a simple native custom widget that draws a cell.
+mod cell {
     // For now, to implement a custom native widget you will need to add
     // `iced_native` and `iced_wgpu` to your dependencies.
     //
@@ -16,22 +16,22 @@ mod circle {
     use iced::mouse;
     use iced::{Border, Color, Element, Length, Rectangle, Size};
 
-    pub struct Circle {
-        radius: f32,
+    pub struct Cell {
+        side: f32,
     }
 
-    impl Circle {
+    impl Cell {
         const CONTENT: &'static str = "X";
-        pub fn new(radius: f32) -> Self {
-            Self { radius}
+        pub fn new(side: f32) -> Self {
+            Self { side}
         }
     }
 
-    pub fn circle(radius: f32) -> Circle {
-        Circle::new(radius)
+    pub fn cell(side: f32) -> Cell {
+        Cell::new(side)
     }
 
-    impl<Message, Theme, Renderer> Widget<Message, Theme, Renderer> for Circle
+    impl<Message, Theme, Renderer> Widget<Message, Theme, Renderer> for Cell
     where
         Renderer: renderer::Renderer + text::Renderer<Font = iced::Font>,
     {
@@ -48,7 +48,7 @@ mod circle {
             _renderer: &Renderer,
             _limits: &layout::Limits,
         ) -> layout::Node {
-            layout::Node::new(Size::new(self.radius * 2.0, self.radius * 2.0))
+            layout::Node::new(Size::new(self.side * 2.0, self.side * 2.0))
         }
 
         fn draw(
@@ -65,7 +65,7 @@ mod circle {
                 renderer::Quad {
                     bounds: layout.bounds(),
                     border: Border{
-                        width: self.radius,
+                        width: self.side,
                         color: Color::from_rgb(0.5, 0.2, 0.3),
                         radius: 0.0.into()
                     },
@@ -75,13 +75,14 @@ mod circle {
             );
 
 
+            let size = self.side * 0.9;
             let content = iced::advanced::Text{
                 content: Self::CONTENT,
                 bounds: iced::Size{
                     width: layout.bounds().width,
                     height: layout.bounds().height
                 },
-                size: 30.0.into(),
+                size: size.into(),
                 line_height: iced::widget::text::LineHeight::default(),
                 horizontal_alignment: iced::alignment::Horizontal::Center,
                 vertical_alignment: iced::alignment::Vertical::Center,
@@ -97,18 +98,18 @@ mod circle {
     }
 
 
-    impl<'a, Message, Theme, Renderer> From<Circle>
+    impl<'a, Message, Theme, Renderer> From<Cell>
         for Element<'a, Message, Theme, Renderer>
     where
         Renderer: renderer::Renderer + text::Renderer<Font = iced::Font>,
     {
-        fn from(circle: Circle) -> Self {
-            Self::new(circle)
+        fn from(cell: Cell) -> Self {
+            Self::new(cell)
         }
     }
 }
 
-use circle::circle;
+use cell::cell;
 use iced::widget::{column, container, slider, text};
 use iced::{Alignment, Element, Length};
 
@@ -117,7 +118,7 @@ pub fn main() -> iced::Result {
 }
 
 struct Example {
-    radius: f32,
+    side: f32,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -127,22 +128,22 @@ enum Message {
 
 impl Example {
     fn new() -> Self {
-        Example { radius: 50.0 }
+        Example { side: 50.0 }
     }
 
     fn update(&mut self, message: Message) {
         match message {
-            Message::RadiusChanged(radius) => {
-                self.radius = radius;
+            Message::RadiusChanged(side) => {
+                self.side = side;
             }
         }
     }
 
     fn view(&self) -> Element<Message> {
         let content = column![
-            circle(self.radius),
-            text(format!("Radius: {:.2}", self.radius)),
-            slider(1.0..=100.0, self.radius, Message::RadiusChanged).step(0.01),
+            cell(self.side),
+            text(format!("Radius: {:.2}", self.side)),
+            slider(1.0..=100.0, self.side, Message::RadiusChanged).step(0.01),
         ]
         .padding(20)
         .spacing(20)
