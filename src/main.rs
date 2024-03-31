@@ -1,5 +1,7 @@
 mod cell;
-use iced::widget::{column, container, slider, text};
+use cell::cell;
+
+use iced::widget::{column, container};
 use iced::{Alignment, Element, Length};
 
 pub fn main() -> iced::Result {
@@ -12,7 +14,7 @@ struct Example {
 
 #[derive(Debug, Clone, Copy)]
 enum Message {
-    RadiusChanged(f32),
+    CellPressed
 }
 
 impl Example {
@@ -22,17 +24,15 @@ impl Example {
 
     fn update(&mut self, message: Message) {
         match message {
-            Message::RadiusChanged(side) => {
-                self.side = side;
+            Message::CellPressed => {
+                self.side = self.side * 2.0;
             }
         }
     }
 
     fn view(&self) -> Element<Message> {
         let content = column![
-            cell::cell(self.side),
-            text(format!("Radius: {:.2}", self.side)),
-            slider(1.0..=100.0, self.side, Message::RadiusChanged).step(0.01),
+            cell(self.side, Message::CellPressed),
         ]
         .padding(20)
         .spacing(20)
