@@ -1,7 +1,7 @@
 mod cell;
 use cell::cell;
 
-use iced::widget::{column, container};
+use iced::widget::{row, column, container};
 use iced::{Alignment, Element, Length};
 
 pub fn main() -> iced::Result {
@@ -15,7 +15,15 @@ struct Example<'a> {
 
 #[derive(Debug, Clone, Copy)]
 enum Message {
-    CellPressed
+    CellPressed11,
+    CellPressed12,
+    CellPressed13,
+    CellPressed21,
+    CellPressed22,
+    CellPressed23,
+    CellPressed31,
+    CellPressed32,
+    CellPressed33
 }
 
 impl<'a> Example<'a> {
@@ -28,23 +36,38 @@ impl<'a> Example<'a> {
 
     fn update(&mut self, message: Message) {
         match message {
-            Message::CellPressed => {
-                self.side *= 1.1;
+            Message::CellPressed11 => {
                 if self.content == "X" {
                     self.content = "O"
                 } else {
                     self.content = "X"
                 }
             }
+            _ => {}
         }
     }
 
     fn view(&self) -> Element<Message> {
         let content = column![
-            cell(self.content, self.side, Message::CellPressed),
+            row![
+                cell(self.content, self.side, Message::CellPressed11),
+                cell(self.content, self.side, Message::CellPressed12),
+                cell(self.content, self.side, Message::CellPressed13)
+            ].spacing(1),
+            row![
+                cell(self.content, self.side, Message::CellPressed21),
+                cell(self.content, self.side, Message::CellPressed22),
+                cell(self.content, self.side, Message::CellPressed23)
+            ].spacing(1),
+            row![
+                cell(self.content, self.side, Message::CellPressed31),
+                cell(self.content, self.side, Message::CellPressed32),
+                cell(self.content, self.side, Message::CellPressed33)
+            ].spacing(1)
+            
         ]
         .padding(20)
-        .spacing(20)
+        .spacing(1)
         .max_width(500)
         .align_items(Alignment::Center);
 

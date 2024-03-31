@@ -10,7 +10,6 @@ pub struct Cell<'a, Message> {
     content: &'a str,
     side: f32,
     on_click: Message
-
 }
 
 
@@ -29,7 +28,7 @@ impl<'a, Message> Cell<'a, Message> {
     }
 }
 
-pub fn cell<'a, Message>(content: &'a str, side: f32, message: Message) -> Cell<'a, Message> {
+pub fn cell<Message>(content: &str, side: f32, message: Message) -> Cell<'_, Message> {
     Cell::new(content, side, message)
 }
 
