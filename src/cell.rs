@@ -6,18 +6,18 @@ use iced::advanced::widget::{self, Widget};
 use iced::mouse;
 use iced::{Border, Color, Element, Length, Rectangle, Size};
 
-pub struct Cell<Message> {
+pub struct Cell<'a, Message> {
+    content: &'a str,
     side: f32,
     on_click: Message
 
 }
 
 
-
-impl<Message> Cell<Message> {
-    const CONTENT: &'static str = "X";
-    pub fn new(side: f32, message: Message) -> Self {
+impl<'a, Message> Cell<'a, Message> {
+    pub fn new(content: &'a str, side: f32, message: Message) -> Self {
         Self {
+            content,
             side,
             on_click: message
         }
@@ -29,11 +29,11 @@ impl<Message> Cell<Message> {
     }
 }
 
-pub fn cell<Message>(side: f32, message: Message) -> Cell<Message> {
-    Cell::new(side, message)
+pub fn cell<'a, Message>(content: &'a str, side: f32, message: Message) -> Cell<'a, Message> {
+    Cell::new(content, side, message)
 }
 
-impl<Message, Theme, Renderer> Widget<Message, Theme, Renderer> for Cell<Message>
+impl<'a, Message, Theme, Renderer> Widget<Message, Theme, Renderer> for Cell<'a, Message>
 where
     Message: Clone,
     Renderer: renderer::Renderer + text::Renderer<Font = iced::Font>,
@@ -80,7 +80,7 @@ where
 
         let size = self.side * 0.9;
         let content = iced::advanced::Text{
-            content: Self::CONTENT,
+            content: self.content,
             bounds: iced::Size{
                 width: layout.bounds().width,
                 height: layout.bounds().height
@@ -127,13 +127,13 @@ where
 }
 
 
-impl<'a, Message, Theme, Renderer> From<Cell<Message>>
+impl<'a, Message, Theme, Renderer> From<Cell<'a, Message>>
     for Element<'a, Message, Theme, Renderer>
 where
     Message: 'a + Clone,
     Renderer: renderer::Renderer + text::Renderer<Font = iced::Font>,
 {
-    fn from(cell: Cell<Message>) -> Self {
+    fn from(cell: Cell<'a, Message>) -> Self {
         Self::new(cell)
     }
 }
