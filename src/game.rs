@@ -145,16 +145,48 @@ impl<'a> Game<'a> {
         }
     }
 
+    fn update_player(&mut self) {
+        self.player = if self.player == "X" {"O"} else {"X"}
+    }
+
     pub fn update(&mut self, message: Message) {
         match message {
             Message::CellPressed11 => {
-                if self.matrix[0] == "X" {
-                    self.matrix[0] = "O"
-                } else {
-                    self.matrix[0]= "X"
-                }
-            }
-            _ => {}
+                self.matrix[0] = self.player;
+                self.update_player();
+           },
+           Message::CellPressed12 => {
+               self.matrix[1] = self.player;
+               self.update_player();
+           },
+           Message::CellPressed13 => {
+               self.matrix[2] = self.player;
+               self.update_player();
+           },
+           Message::CellPressed21 => {
+               self.matrix[3] = self.player;
+               self.update_player();
+           },
+           Message::CellPressed22 => {
+               self.matrix[4] = self.player;
+               self.update_player();
+           },
+           Message::CellPressed23 => {
+               self.matrix[5] = self.player;
+               self.update_player();
+           },
+           Message::CellPressed31 => {
+               self.matrix[6] = self.player;
+               self.update_player();
+           }, 
+           Message::CellPressed32 => {
+               self.matrix[7] = self.player;
+               self.update_player();
+           },
+           Message::CellPressed33 => {
+               self.matrix[8] = self.player;
+               self.update_player();
+           }
         }
     }
 
