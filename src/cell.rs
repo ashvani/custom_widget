@@ -9,16 +9,20 @@ use iced::{Border, Color, Element, Length, Rectangle, Size};
 pub struct Cell<'a, Message> {
     content: &'a str,
     side: f32,
-    on_click: Message
+    on_click: Message,
 }
 
 
 impl<'a, Message> Cell<'a, Message> {
-    pub fn new(content: &'a str, side: f32, message: Message) -> Self {
+    pub fn new(
+        content: &'a str,
+        side: f32, 
+        message: Message
+        ) -> Self {
         Self {
             content,
             side,
-            on_click: message
+            on_click: message,
         }
     }
 
@@ -28,7 +32,7 @@ impl<'a, Message> Cell<'a, Message> {
     }
 }
 
-pub fn cell<Message>(content: &str, side: f32, message: Message) -> Cell<'_, Message> {
+pub fn cell<Message>(content: &str, side: f32, message: Message, ) -> Cell<'_, Message> {
     Cell::new(content, side, message)
 }
 
