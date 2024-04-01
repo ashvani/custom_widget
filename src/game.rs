@@ -42,11 +42,7 @@ impl<'a> Game<'a> {
     }
 
     pub fn is_valid_index(&self, index: usize) -> bool {
-       if index < 9 && self.matrix[index] == " " {
-           true 
-       } else {
-           false 
-       }
+        index < 9 && self.matrix[index] == " "  
     }
 
     pub fn update_matrix(& mut self, index: usize) {
@@ -114,11 +110,7 @@ impl<'a> Game<'a> {
 
 
     fn win(&mut self) -> bool {
-        if self.row_win() || self.column_win() || self.diagonal_win() {
-            true
-        } else {
-            false 
-        }
+        self.row_win() || self.column_win() || self.diagonal_win() 
     }
 
     fn draw(&self) -> bool {
@@ -192,7 +184,7 @@ impl<'a> Game<'a> {
 
     pub fn view(&self) -> Element<Message> {
         let content = column![
-            text("X's turn"),
+            text(format!("{}'s turn", self.player)).size(40),
             row![
                 cell(self.matrix[0], 40.0, Message::CellPressed11),
                 cell(self.matrix[1], 40.0, Message::CellPressed12),
@@ -207,8 +199,8 @@ impl<'a> Game<'a> {
                 cell(self.matrix[6], 40.0, Message::CellPressed31),
                 cell(self.matrix[7], 40.0, Message::CellPressed32),
                 cell(self.matrix[8], 40.0, Message::CellPressed33)
-            ].spacing(1)
-            
+            ].spacing(1),
+            text(format!("Congratulations! {} won!", self.player)).size(40)
         ]
         .padding(20)
         .spacing(1)

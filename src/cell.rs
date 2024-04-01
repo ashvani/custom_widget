@@ -127,6 +127,22 @@ where
             event::Status::Ignored
         }
     }
+
+    fn mouse_interaction(
+            &self,
+            _state: &widget::Tree,
+            layout: Layout<'_>,
+            cursor: iced::advanced::mouse::Cursor,
+            _viewport: &Rectangle,
+            _renderer: &Renderer,
+        ) -> iced::advanced::mouse::Interaction {
+        if cursor.is_over(layout.bounds()) {
+            mouse::Interaction::Working
+        } else {
+            mouse::Interaction::Idle
+        }
+        
+    }
 }
 
 
