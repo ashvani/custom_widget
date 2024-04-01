@@ -6,7 +6,8 @@ use crate::cell;
 pub struct Game<'a> {
     matrix: Vec<&'a str>,
     player: &'a str,
-    winning_row: Vec<i32>
+    winning_row: Vec<i32>,
+    game_result: String 
 }
 
 
@@ -37,7 +38,8 @@ impl<'a> Game<'a> {
         Self{
             matrix: value,
             player: "X",
-            winning_row: Vec::new()
+            winning_row: Vec::new(),
+            game_result: "".to_string()
         }
     }
 
@@ -145,41 +147,41 @@ impl<'a> Game<'a> {
         match message {
             Message::CellPressed11 => {
                 self.matrix[0] = self.player;
-                self.update_player();
            },
            Message::CellPressed12 => {
                self.matrix[1] = self.player;
-               self.update_player();
            },
            Message::CellPressed13 => {
                self.matrix[2] = self.player;
-               self.update_player();
            },
            Message::CellPressed21 => {
                self.matrix[3] = self.player;
-               self.update_player();
            },
            Message::CellPressed22 => {
                self.matrix[4] = self.player;
-               self.update_player();
            },
            Message::CellPressed23 => {
                self.matrix[5] = self.player;
-               self.update_player();
            },
            Message::CellPressed31 => {
                self.matrix[6] = self.player;
-               self.update_player();
            }, 
            Message::CellPressed32 => {
                self.matrix[7] = self.player;
-               self.update_player();
            },
            Message::CellPressed33 => {
                self.matrix[8] = self.player;
-               self.update_player();
            }
         }
+
+        if self.win() {
+            self.game_result = format!("Congratulations! {} Won.", self.player);
+        } else if self.draw() {
+            self.game_result = format!("Game Drew.");
+        }
+        self.update_player();
+
+
     }
 
     pub fn view(&self) -> Element<Message> {
@@ -200,7 +202,7 @@ impl<'a> Game<'a> {
                 cell(self.matrix[7], 40.0, Message::CellPressed32),
                 cell(self.matrix[8], 40.0, Message::CellPressed33)
             ].spacing(1),
-            text(format!("Congratulations! {} won!", self.player)).size(40)
+            text(self.game_result.clone()).size(40)
         ]
         .padding(20)
         .spacing(1)
