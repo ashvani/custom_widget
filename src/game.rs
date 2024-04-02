@@ -28,10 +28,6 @@ pub enum Message {
 
 impl<'a> Game<'a> {
 
-    pub fn player(&self) -> &str {
-        self.player
-    }
-
 
     pub fn new() -> Self{
         let value: Vec<&str> = [" "].repeat(9);
@@ -45,14 +41,6 @@ impl<'a> Game<'a> {
 
     pub fn is_valid_index(&self, index: usize) -> bool {
         index < 9 && self.matrix[index] == " "  
-    }
-
-    pub fn update_matrix(& mut self, index: usize) {
-        self.matrix[index] = self.player;
-    }
-
-    pub fn update_index(&mut self) {
-        self.player = if self.player == "X" {"O"} else {"X"};
     }
 
     fn row_win(&mut self) -> bool {
@@ -146,42 +134,58 @@ impl<'a> Game<'a> {
     pub fn update(&mut self, message: Message) {
         match message {
             Message::CellPressed11 => {
-                self.matrix[0] = self.player;
+                if self.is_valid_index(0) {
+                    self.matrix[0] = self.player
+                }
            },
            Message::CellPressed12 => {
-               self.matrix[1] = self.player;
+               if self.is_valid_index(1) {
+                    self.matrix[1] = self.player
+                }
            },
            Message::CellPressed13 => {
-               self.matrix[2] = self.player;
+               if self.is_valid_index(2) {
+                    self.matrix[2] = self.player
+                }
            },
            Message::CellPressed21 => {
-               self.matrix[3] = self.player;
+               if self.is_valid_index(3) {
+                    self.matrix[3] = self.player
+                }
            },
            Message::CellPressed22 => {
-               self.matrix[4] = self.player;
+
+               if self.is_valid_index(4) {
+                    self.matrix[4] = self.player
+                }
            },
            Message::CellPressed23 => {
-               self.matrix[5] = self.player;
+               if self.is_valid_index(5) {
+                    self.matrix[5] = self.player
+                }
            },
            Message::CellPressed31 => {
-               self.matrix[6] = self.player;
+               if self.is_valid_index(6) {
+                    self.matrix[6] = self.player
+                }
            }, 
            Message::CellPressed32 => {
-               self.matrix[7] = self.player;
+               if self.is_valid_index(7) {
+                    self.matrix[7] = self.player
+                }
            },
            Message::CellPressed33 => {
-               self.matrix[8] = self.player;
+               if self.is_valid_index(8) {
+                    self.matrix[8] = self.player
+                }
            }
         }
 
-        if self.win() {
-            self.game_result = format!("Congratulations! {} Won.", self.player);
-        } else if self.draw() {
-            self.game_result = format!("Game Drew.");
+        match self.status() {
+            0 => self.game_result = format!("Congratulations! {} Won.", self.player),
+            1 => self.game_result = "Game Drew.".to_string(),
+            _ => self.update_player()
         }
-        self.update_player();
-
-
     }
 
     pub fn view(&self) -> Element<Message> {
