@@ -7,9 +7,9 @@ pub struct Game<'a> {
     matrix: Vec<&'a str>,
     player: &'a str,
     winning_row: Vec<i32>,
-    game_result: String 
+    game_result: String,
+    disable: Vec<bool>
 }
-
 
 
 #[derive(Debug, Clone, Copy)]
@@ -31,11 +31,13 @@ impl<'a> Game<'a> {
 
     pub fn new() -> Self{
         let value: Vec<&str> = [" "].repeat(9);
+        let disable = [false].repeat(9);
         Self{
             matrix: value,
             player: "X",
             winning_row: Vec::new(),
-            game_result: "".to_string()
+            game_result: "".to_string(),
+            disable
         }
     }
 
@@ -135,54 +137,66 @@ impl<'a> Game<'a> {
         match message {
             Message::CellPressed11 => {
                 if self.is_valid_index(0) {
-                    self.matrix[0] = self.player
+                    self.matrix[0] = self.player;
+                    self.disable[0] = true;
                 }
            },
            Message::CellPressed12 => {
                if self.is_valid_index(1) {
-                    self.matrix[1] = self.player
+                    self.matrix[1] = self.player;
+                    self.disable[1] = true;
                 }
            },
            Message::CellPressed13 => {
                if self.is_valid_index(2) {
-                    self.matrix[2] = self.player
+                    self.matrix[2] = self.player;
+                    self.disable[2] = true;
                 }
            },
            Message::CellPressed21 => {
                if self.is_valid_index(3) {
-                    self.matrix[3] = self.player
+                    self.matrix[3] = self.player;
+                    self.disable[3] = true;
                 }
            },
            Message::CellPressed22 => {
 
                if self.is_valid_index(4) {
-                    self.matrix[4] = self.player
+                    self.matrix[4] = self.player;
+                    self.disable[4] = true;
                 }
            },
            Message::CellPressed23 => {
                if self.is_valid_index(5) {
-                    self.matrix[5] = self.player
+                    self.matrix[5] = self.player;
+                    self.disable[5] = true;
                 }
            },
            Message::CellPressed31 => {
                if self.is_valid_index(6) {
-                    self.matrix[6] = self.player
+                    self.matrix[6] = self.player;
+                    self.disable[6] = true;
                 }
            }, 
            Message::CellPressed32 => {
                if self.is_valid_index(7) {
-                    self.matrix[7] = self.player
+                    self.matrix[7] = self.player;
+                    self.disable[7] = true;
                 }
            },
            Message::CellPressed33 => {
                if self.is_valid_index(8) {
-                    self.matrix[8] = self.player
+                    self.matrix[8] = self.player;
+                    self.disable[8] = true;
                 }
            }
         }
 
         match self.status() {
-            0 => self.game_result = format!("Congratulations! {} Won.", self.player),
+            0 => {
+                self.game_result = format!("Congratulations! {} Won.", self.player);
+                self.disable = [true].repeat(9);
+            },
             1 => self.game_result = "Game Drew.".to_string(),
             _ => self.update_player()
         }
@@ -192,19 +206,19 @@ impl<'a> Game<'a> {
         let content = column![
             text(format!("{}'s turn", self.player)).size(40),
             row![
-                cell(self.matrix[0], 40.0, Message::CellPressed11),
-                cell(self.matrix[1], 40.0, Message::CellPressed12),
-                cell(self.matrix[2], 40.0, Message::CellPressed13)
+                cell(self.matrix[0], 40.0, Message::CellPressed11, self.disable[0]),
+                cell(self.matrix[1], 40.0, Message::CellPressed12, self.disable[1]),
+                cell(self.matrix[2], 40.0, Message::CellPressed13, self.disable[2])
             ].spacing(1),
             row![
-                cell(self.matrix[3], 40.0, Message::CellPressed21),
-                cell(self.matrix[4], 40.0, Message::CellPressed22),
-                cell(self.matrix[5], 40.0, Message::CellPressed23)
+                cell(self.matrix[3], 40.0, Message::CellPressed21, self.disable[3]),
+                cell(self.matrix[4], 40.0, Message::CellPressed22, self.disable[4]),
+                cell(self.matrix[5], 40.0, Message::CellPressed23, self.disable[5])
             ].spacing(1),
             row![
-                cell(self.matrix[6], 40.0, Message::CellPressed31),
-                cell(self.matrix[7], 40.0, Message::CellPressed32),
-                cell(self.matrix[8], 40.0, Message::CellPressed33)
+                cell(self.matrix[6], 40.0, Message::CellPressed31, self.disable[6]),
+                cell(self.matrix[7], 40.0, Message::CellPressed32, self.disable[7]),
+                cell(self.matrix[8], 40.0, Message::CellPressed33, self.disable[8])
             ].spacing(1),
             text(self.game_result.clone()).size(40)
         ]

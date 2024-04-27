@@ -10,6 +10,7 @@ pub struct Cell<'a, Message> {
     content: &'a str,
     side: f32,
     on_click: Message,
+    disabled: bool
 }
 
 
@@ -17,12 +18,14 @@ impl<'a, Message> Cell<'a, Message> {
     pub fn new(
         content: &'a str,
         side: f32, 
-        message: Message
+        message: Message,
+        disabled: bool
         ) -> Self {
         Self {
             content,
             side,
             on_click: message,
+            disabled
         }
     }
 
@@ -32,8 +35,8 @@ impl<'a, Message> Cell<'a, Message> {
     }
 }
 
-pub fn cell<Message>(content: &str, side: f32, message: Message, ) -> Cell<'_, Message> {
-    Cell::new(content, side, message)
+pub fn cell<Message>(content: &str, side: f32, message: Message, disable: bool) -> Cell<'_, Message> {
+    Cell::new(content, side, message, disable)
 }
 
 impl<'a, Message, Theme, Renderer> Widget<Message, Theme, Renderer> for Cell<'a, Message>
@@ -116,16 +119,20 @@ where
         if cursor.is_over(layout.bounds()) {
             match event {
                 iced::Event::Mouse(mouse::Event::ButtonPressed(_)) => {
-                    shell.publish(self.on_click.clone());
-                    event::Status::Captured
-                }
+                    if !self.disabled {
+                        shell.publish(self.on_click.clone());
+                        event::Status::Captured
+                    } else {
+                        event::Status::Ignored
+                    }
+                },
 
-                _ => event::Status::Ignored,
+                _ => event::Status::Ignored
             }
-
         } else {
-            event::Status::Ignored
+                event::Status::Ignored
         }
+        
     }
 
     fn mouse_interaction(
